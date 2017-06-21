@@ -1,8 +1,36 @@
 import React, { Component } from 'react';
-import Bootstrap from 'bootstrap';
 
 class Header extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      index: 1
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.state.index = newProps.defects.defects.index + 1;
+  }
+
+  handleEnter(e) {
+    if(e.keyCode == 13) {
+      e.preventDefault();
+      this.props.handleJumpIndex.bind(null, this.state.index)();
+    }
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
   render() {
+    const index = this.props.defects.defects.index;
+    const length = this.props.defects.defects.list.length;
     return (
       <header>
         <nav className="navbar navbar-default">
@@ -29,17 +57,16 @@ class Header extends Component {
                     <li><a href="#">Separated link</a></li>
                     <li role="separator" className="divider"></li>
                     <li><a href="#">One more separated link</a></li>
-                    -->
                   </ul>
                 </li>
-                <li id="paginator-left"><a href="#"><span className="glyphicon glyphicon-arrow-left"></span></a></li>
-                <li id="paginator-right"><a href="#"><span className="glyphicon glyphicon-arrow-right"></span></a></li>
+                <li id="paginator-left"><a href="#"><span className="glyphicon glyphicon-arrow-left" onClick={this.props.handleDecrementIndex}></span></a></li>
+                <li id="paginator-right"><a href="#"><span className="glyphicon glyphicon-arrow-right" onClick={this.props.handleIncrementIndex}></span></a></li>
               </ul>
              <form className="navbar-form navbar-left">
               <div className="form-group">
-                <input type="text" className="form-control" placeholder="Quick Find" />
+                <input type="text" className="form-control" name="index" onKeyDown={this.handleEnter} onChange={this.handleChange} value={this.state.index} />
               </div>
-              <button className="btn btn-default" type="button">Search</button>
+              <button className="btn btn-default" type="button" onClick={this.props.handleJumpIndex.bind(null, this.state.index)}>Total {length}</button>
             </form>
               <ul className="nav navbar-nav">
                 <li><a href="#"><span className="glyphicon glyphicon-plus"></span></a></li >
